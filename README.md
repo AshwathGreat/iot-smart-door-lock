@@ -78,7 +78,18 @@ Door Lock
 
 ## System Architecture
 
-[System architecture diagram]
+The system consists of two major functions:
+
+1. Visitor monitoring using the ESP32-CAM and email notification.
+2. Remote door-control functionality using Alexa integration.
+
+The visitor-monitoring workflow is:
+
+Visitor → Doorbell → ESP32-CAM → Image Capture → Wi-Fi → Gmail → Owner
+
+The remote-access workflow is:
+
+Owner → Alexa → Door-Control System → Door Lock
 
 ## Circuit Diagram
 
