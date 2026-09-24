@@ -203,6 +203,8 @@ GitHub recommends using security features such as secret scanning and push prote
 🥇 Prize awarded by the Educational Minister of Tamil Nadu for the project.
 🏆 Selected among the Top Eleven teams for the Times NIE Vista Ideathon 2023–24 Grand Finale.
 📍 Grand Finale held at Hilton Chennai.
+
+![Award Recognition](images/award.jpg)
 ---
 
 ## 👥 Team
