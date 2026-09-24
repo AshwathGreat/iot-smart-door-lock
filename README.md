@@ -188,14 +188,6 @@ GitHub recommends using security features such as secret scanning and push prote
 
 ![Prototype](images/prototype.jpg)
 
-### Demonstration
-
-![Demonstration](images/demonstration.jpg)
-
-### Presentation
-
-![Presentation](images/presentation.jpg)
-
 ---
 
 ## 🏆 Achievement
