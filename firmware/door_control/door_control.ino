@@ -1,69 +1,80 @@
 /*
   IoT Smart Door Lock & Visitor Monitoring System
 
-  Door Control Module
+  ELECTRIC DOOR LOCK CONTROL
 
-  Purpose:
-  Controls the door-lock actuator from a control command.
+  Function:
+  Controls an electric door lock through a relay/control module.
 
-  Project architecture:
-
-      Alexa / Remote Control
-              |
-              v
-       Door Control Logic
-              |
-              v
-        Relay / Actuator
-              |
-              v
-          Door Lock
+  Commands through Serial Monitor:
+      OPEN  -> unlocks the door
+      CLOSE -> locks the door
 
   IMPORTANT:
-  The exact relay GPIO and lock mechanism used in the
-  original prototype were not documented in the available
-  project material. Therefore, the values below are
-  configurable placeholders.
+  The relay GPIO and relay logic level below are configurable.
+  Do not connect an electric lock directly to an ESP32 GPIO.
 */
 
+
 #include <Arduino.h>
+
 
 // =====================================================
 // HARDWARE CONFIGURATION
 // =====================================================
 
-// Replace this with the GPIO connected to your
-// door-lock relay/actuator.
-#define LOCK_CONTROL_PIN 26
+// GPIO connected to the relay/control input.
+// Change this if your actual hardware uses another pin.
+#define LOCK_RELAY_PIN 26
 
-// Change these if your relay works in the opposite way.
-#define LOCKED   LOW
-#define UNLOCKED HIGH
+
+// -----------------------------------------------------
+// Relay logic
+// -----------------------------------------------------
+//
+// Many relay modules are ACTIVE LOW:
+//
+// LOW  = relay ON
+// HIGH = relay OFF
+//
+// If your relay works the opposite way, change these.
+#define RELAY_ON  LOW
+#define RELAY_OFF HIGH
 
 
 // =====================================================
-// LOCK CONTROL FUNCTIONS
+// DOOR LOCK FUNCTIONS
 // =====================================================
 
 void lockDoor() {
 
+  /*
+     For a typical electric lock system,
+     the relay returns to the locked state.
+  */
+
   digitalWrite(
-    LOCK_CONTROL_PIN,
-    LOCKED
+    LOCK_RELAY_PIN,
+    RELAY_OFF
   );
 
-  Serial.println("Door locked.");
+  Serial.println("Door: LOCKED");
 }
 
 
 void unlockDoor() {
 
+  /*
+     Activate the relay/control output
+     to operate the electric lock.
+  */
+
   digitalWrite(
-    LOCK_CONTROL_PIN,
-    UNLOCKED
+    LOCK_RELAY_PIN,
+    RELAY_ON
   );
 
-  Serial.println("Door unlocked.");
+  Serial.println("Door: UNLOCKED");
 }
 
 
@@ -75,30 +86,46 @@ void setup() {
 
   Serial.begin(115200);
 
+  // Configure relay control pin
   pinMode(
-    LOCK_CONTROL_PIN,
+    LOCK_RELAY_PIN,
     OUTPUT
   );
 
-  // Start in the locked state.
+  // Start in locked state
   lockDoor();
 
   Serial.println();
   Serial.println(
-    "Smart Door Control Module Ready"
+    "================================="
   );
 
   Serial.println(
-    "Commands:"
+    " SMART ELECTRIC DOOR LOCK"
   );
 
   Serial.println(
-    "  OPEN  - Unlock door"
+    " CONTROL MODULE"
   );
 
   Serial.println(
-    "  CLOSE - Lock door"
+    "================================="
   );
+
+  Serial.println();
+  Serial.println(
+    "Available commands:"
+  );
+
+  Serial.println(
+    "OPEN  - Unlock door"
+  );
+
+  Serial.println(
+    "CLOSE - Lock door"
+  );
+
+  Serial.println();
 }
 
 
@@ -108,10 +135,7 @@ void setup() {
 
 void loop() {
 
-  // Receive a simple control command
-  // through the Serial Monitor.
-
-  if (Serial.available()) {
+  if (Serial.available() > 0) {
 
     String command =
       Serial.readStringUntil('\n');
@@ -120,11 +144,20 @@ void loop() {
     command.toUpperCase();
 
 
+    // -----------------------------------------------
+    // OPEN DOOR
+    // -----------------------------------------------
+
     if (command == "OPEN") {
 
       unlockDoor();
 
     }
+
+
+    // -----------------------------------------------
+    // CLOSE DOOR
+    // -----------------------------------------------
 
     else if (command == "CLOSE") {
 
@@ -132,10 +165,15 @@ void loop() {
 
     }
 
+
+    // -----------------------------------------------
+    // INVALID COMMAND
+    // -----------------------------------------------
+
     else {
 
       Serial.println(
-        "Unknown command."
+        "Invalid command."
       );
 
       Serial.println(
